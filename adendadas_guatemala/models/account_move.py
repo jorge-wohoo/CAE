@@ -58,9 +58,10 @@ class AccountMove(models.Model):
                     if self.move_type in ["in_refund", "out_refund"]:
                         total_monto_impuesto = ("%(ImpuestoTotal)s")  % {"ImpuestoTotal": -(Decimal(self.amount_tax_signed).quantize(Decimal("0.01"), rounding = "ROUND_HALF_UP"))}
                     if self.currency_id.name == "USD":
-                        total_monto_impuesto = self.amount_tax
+                        total_monto_impuesto = ("%(ImpuestoTotal)s")  % {"ImpuestoTotal": (Decimal(self.amount_tax).quantize(Decimal("0.01"), rounding = "ROUND_HALF_UP"))}
+                    
                     xml_str = xml_str[:index_total_monto_impuesto+20] + str(total_monto_impuesto) + xml_str[index2-14:]
-            xml_str = xml_str[:index_final + 10] + tag_adendda + xml_str[dte_end - 1:]
+            xml_str = xml_str[:index_final + 9] + tag_adendda + xml_str[dte_end - 1:]
             fname = self.get_fname_xml(annulled)
             self.generate_attachment_from_xml_string(xml_str, fname)
         else:
